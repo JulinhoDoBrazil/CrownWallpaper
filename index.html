@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<title>CROWN — Galerie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-0:#07090a;
+    --bg-1:#0d1210;
+    --ink:#eef4ec;
+    --ink-dim:#93a396;
+    --ink-faint:#576459;
+    --accent:#3ecf6e;
+    --accent-dim:#1f7a3f;
+    --gold:#6fae5c;
+    --glass-fill: rgba(255,255,255,0.05);
+    --glass-fill-hover: rgba(255,255,255,0.085);
+    --glass-border: rgba(255,255,255,0.13);
+    --radius: 22px;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background:var(--bg-0);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    font-weight:400;
+    min-height:100vh;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ambient color blobs behind the glass */
+  .field{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+    overflow:hidden;
+  }
+  .blob{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(90px);
+    opacity:0.55;
+  }
+  .blob.b1{ width:46vw; height:46vw; top:-14vw; left:-10vw; background:radial-gradient(circle, var(--accent) 0%, transparent 70%); opacity:0.30;}
+  .blob.b2{ width:38vw; height:38vw; bottom:-8vw; right:-6vw; background:radial-gradient(circle, #17532f 0%, transparent 70%); opacity:0.38;}
+  .blob.b3{ width:30vw; height:30vw; top:35vh; right:15vw; background:radial-gradient(circle, var(--gold) 0%, transparent 70%); opacity:0.14;}
+
+  .grain{
+    position:fixed;
+    inset:0;
+    z-index:1;
+    pointer-events:none;
+    opacity:0.045;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  header{
+    position:fixed;
+    top:22px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:50;
+    width:min(1180px, 92vw);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 22px;
+    border-radius:999px;
+    background:var(--glass-fill);
+    border:1px solid var(--glass-border);
+    backdrop-filter:blur(22px) saturate(160%);
+    -webkit-backdrop-filter:blur(22px) saturate(160%);
+  }
+  header .mark{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    letter-spacing:0.04em;
+    font-size:16px;
+  }
+  header .mark span{ color:var(--accent); }
+  header nav{ display:flex; gap:28px; }
+  header nav a{
+    color:var(--ink-dim);
+    text-decoration:none;
+    font-size:13px;
+    letter-spacing:0.03em;
+    transition:color 0.25s ease;
+  }
+  header nav a:hover{ color:var(--ink); }
+  header .count{
+    font-size:12px;
+    color:var(--ink-faint);
+    letter-spacing:0.05em;
+    border-left:1px solid var(--glass-border);
+    padding-left:20px;
+  }
+
+  main{ position:relative; z-index:5; }
+
+  .hero{
+    min-height:92vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:120px 24px 60px;
+    position:relative;
+  }
+  .hero .eyebrow{
+    font-size:12px;
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    margin-bottom:22px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .hero .eyebrow::before,
+  .hero .eyebrow::after{
+    content:'';
+    width:26px;
+    height:1px;
+    background:var(--ink-faint);
+  }
+  .hero h1{
+    font-family:'Fraunces', serif;
+    font-weight:400;
+    font-size:clamp(48px, 9vw, 108px);
+    line-height:0.98;
+    letter-spacing:-0.01em;
+  }
+  .hero h1 em{
+    font-style:italic;
+    font-weight:300;
+    color:transparent;
+    -webkit-text-stroke:1px var(--ink);
+  }
+  .hero p{
+    max-width:520px;
+    margin:26px auto 0;
+    color:var(--ink-dim);
+    font-size:15.5px;
+    line-height:1.7;
+    font-weight:300;
+  }
+
+  .hero .support-box{
+    margin-top:32px;
+    display:inline-flex;
+    align-items:center;
+    gap:12px;
+    padding:14px 26px;
+    border-radius:16px;
+    background:linear-gradient(135deg, rgba(255,190,60,0.12), rgba(255,190,60,0.04));
+    border:1.5px dashed rgba(255,190,60,0.55);
+    color:#ffd27a;
+    text-decoration:none;
+    font-size:13.5px;
+    font-weight:500;
+    letter-spacing:0.02em;
+    transition:all 0.3s ease;
+    box-shadow:0 0 0 rgba(255,190,60,0);
+  }
+  .hero .support-box .cup{ font-size:17px; }
+  .hero .support-box:hover{
+    background:linear-gradient(135deg, rgba(255,190,60,0.22), rgba(255,190,60,0.08));
+    border-color:rgba(255,190,60,0.9);
+    transform:translateY(-2px);
+    box-shadow:0 10px 24px rgba(255,190,60,0.18);
+  }
+
+  .hero .glass-cta{
+    margin-top:44px;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:15px 30px;
+    border-radius:999px;
+    background:var(--glass-fill);
+    border:1px solid var(--glass-border);
+    backdrop-filter:blur(20px) saturate(160%);
+    -webkit-backdrop-filter:blur(20px) saturate(160%);
+    color:var(--ink);
+    text-decoration:none;
+    font-size:13.5px;
+    letter-spacing:0.03em;
+    transition:all 0.3s ease;
+  }
+  .hero .glass-cta:hover{
+    background:var(--glass-fill-hover);
+    transform:translateY(-2px);
+    box-shadow:0 14px 30px rgba(0,0,0,0.4);
+  }
+  .hero .glass-cta .arrow{ transition:transform 0.3s ease; }
+  .hero .glass-cta:hover .arrow{ transform:translateY(3px); }
+
+  .hero-strip{
+    margin-top:70px;
+    display:flex;
+    gap:16px;
+    padding:0 24px;
+    width:min(1180px, 94vw);
+  }
+  .hero-strip .swatch{
+    flex:1;
+    height:150px;
+    border-radius:16px;
+    background-size:cover;
+    background-position:center;
+    border:1px solid var(--glass-border);
+    opacity:0.9;
+    filter:saturate(1.05);
+    position:relative;
+    overflow:hidden;
+  }
+  .hero-strip .swatch::after{
+    content:'';
+    position:absolute; inset:0;
+    background:linear-gradient(180deg, transparent 40%, rgba(10,10,13,0.55) 100%);
+  }
+
+  section.gallery{
+    padding:60px 24px 40px;
+    max-width:1180px;
+    margin:0 auto;
+  }
+  section.collections{
+    padding:60px 24px 0;
+    max-width:1180px;
+    margin:0 auto;
+  }
+  .collection-tabs{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .collection-tabs .tab{
+    padding:11px 24px;
+    border-radius:999px;
+    background:var(--glass-fill);
+    border:1px solid var(--glass-border);
+    backdrop-filter:blur(20px) saturate(160%);
+    -webkit-backdrop-filter:blur(20px) saturate(160%);
+    color:var(--ink-faint);
+    font-family:inherit;
+    font-size:13.5px;
+    letter-spacing:0.02em;
+    cursor:pointer;
+    transition:all 0.3s ease;
+  }
+  .collection-tabs .tab:hover{
+    color:var(--ink);
+    background:var(--glass-fill-hover);
+  }
+  .collection-tabs .tab.active{
+    color:#0a0a0d;
+    background:var(--accent);
+    border-color:var(--accent);
+  }
+  .section-head{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    margin-bottom:34px;
+    padding-bottom:20px;
+    border-bottom:1px solid var(--glass-border);
+    flex-wrap:wrap;
+    gap:14px;
+  }
+  .section-head h2{
+    font-family:'Fraunces', serif;
+    font-weight:400;
+    font-size:clamp(26px, 4vw, 36px);
+  }
+  .section-head p{
+    color:var(--ink-faint);
+    font-size:13px;
+    max-width:340px;
+    line-height:1.6;
+    text-align:right;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(12, 1fr);
+    gap:20px;
+  }
+  .card{
+    grid-column:span 6;
+    border-radius:var(--radius);
+    background:var(--glass-fill);
+    border:1px solid var(--glass-border);
+    backdrop-filter:blur(18px) saturate(150%);
+    -webkit-backdrop-filter:blur(18px) saturate(150%);
+    overflow:hidden;
+    position:relative;
+    transition:transform 0.45s cubic-bezier(.2,.8,.2,1), background 0.35s ease, box-shadow 0.45s ease;
+  }
+  .card.wide{ grid-column:span 8; }
+  .card.narrow{ grid-column:span 4; }
+  .card:hover{
+    transform:translateY(-6px);
+    background:var(--glass-fill-hover);
+    box-shadow:0 24px 50px rgba(0,0,0,0.5);
+  }
+
+  .card .frame{
+    position:relative;
+    width:100%;
+    aspect-ratio:3/2;
+    overflow:hidden;
+  }
+  .card .frame.portrait{
+    aspect-ratio:9/16;
+  }
+  .card .frame img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    transition:transform 0.7s cubic-bezier(.2,.8,.2,1), filter 0.5s ease;
+  }
+  .card:hover .frame img{ transform:scale(1.045); }
+
+  .card .frame .num{
+    position:absolute;
+    top:16px;
+    left:16px;
+    font-family:'Fraunces', serif;
+    font-size:12px;
+    letter-spacing:0.08em;
+    color:#eef4ec;
+    background:rgba(7,9,10,0.5);
+    border:1px solid rgba(255,255,255,0.16);
+    backdrop-filter:blur(10px);
+    padding:5px 11px;
+    border-radius:999px;
+  }
+
+  .card .meta{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 20px 20px;
+    gap:12px;
+  }
+  .card .meta .info h3{
+    font-family:'Fraunces', serif;
+    font-weight:400;
+    font-size:17px;
+    margin-bottom:5px;
+    letter-spacing:0.01em;
+  }
+  .card .meta .info .specs{
+    font-size:11.5px;
+    color:var(--ink-faint);
+    letter-spacing:0.03em;
+  }
+
+  .dl{
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.06);
+    border:1px solid var(--glass-border);
+    color:var(--ink);
+    text-decoration:none;
+    transition:all 0.3s ease;
+  }
+  .dl:hover{
+    background:var(--accent);
+    border-color:var(--accent);
+    color:#07090a;
+    transform:scale(1.08);
+    box-shadow:0 8px 22px rgba(62,207,110,0.35);
+  }
+  .dl svg{ width:16px; height:16px; }
+
+  .all-download{
+    margin-top:50px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:26px 30px;
+    border-radius:var(--radius);
+    background:linear-gradient(135deg, rgba(62,207,110,0.14), rgba(255,255,255,0.04));
+    border:1px solid var(--glass-border);
+    backdrop-filter:blur(20px) saturate(160%);
+    -webkit-backdrop-filter:blur(20px) saturate(160%);
+    flex-wrap:wrap;
+    gap:18px;
+  }
+  .all-download .txt h3{
+    font-family:'Fraunces', serif;
+    font-weight:400;
+    font-size:22px;
+    margin-bottom:6px;
+  }
+  .all-download .txt p{
+    color:var(--ink-dim);
+    font-size:13px;
+    max-width:420px;
+    line-height:1.6;
+  }
+  .btn-primary{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:14px 26px;
+    border-radius:999px;
+    background:var(--ink);
+    color:var(--bg-0);
+    text-decoration:none;
+    font-size:13.5px;
+    font-weight:500;
+    letter-spacing:0.02em;
+    transition:all 0.3s ease;
+    white-space:nowrap;
+  }
+  .btn-primary:hover{
+    background:var(--accent);
+    color:#07090a;
+    transform:translateY(-2px);
+  }
+
+  footer{
+    margin-top:80px;
+    padding:40px 24px 60px;
+    text-align:center;
+    color:var(--ink-faint);
+    font-size:12px;
+    letter-spacing:0.04em;
+    position:relative;
+    z-index:5;
+  }
+  footer .line{
+    width:60px;
+    height:1px;
+    background:var(--glass-border);
+    margin:0 auto 22px;
+  }
+
+  @media (max-width: 860px){
+    .card{ grid-column:span 12 !important; }
+    header{ padding:12px 16px; }
+    header nav{ display:none; }
+    .hero-strip{ display:none; }
+    .section-head{ flex-direction:column; align-items:flex-start; }
+    .section-head p{ text-align:left; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; animation:none !important; }
+  }
+
+  /* discourage casual right-click / drag saving of preview images */
+  .frame img, .swatch{
+    -webkit-user-drag:none;
+    user-select:none;
+    -webkit-touch-callout:none;
+  }
+</style>
+</head>
+<body>
+
+  <div class="field">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+  </div>
+  <div class="grain"></div>
+
+  <header>
+    <div class="mark">CROWN<span>.</span></div>
+    <nav>
+      <a href="#galerie">Galerie</a>
+      <a href="#tout">Tout télécharger</a>
+    </nav>
+    <div class="count">61 œuvres</div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="eyebrow">Collection à l'huile — édition numérique</div>
+      <h1>Vies rouges,<br><em>textures</em> vraies.</h1>
+      <p>Soixante-et-une compositions à l'empâtement épais — voitures, verts de golf, podiums et portraits — réunies dans une seule galerie. Chaque image est disponible en pleine résolution.</p>
+      <a href="https://www.buymeacoffee.com/CrownWallpaper" target="_blank" rel="noopener noreferrer" class="support-box"><span class="cup">☕</span> Support me 1$ (optional)</a>
+      <br>
+      <a href="#galerie" class="glass-cta">Voir la collection <span class="arrow">↓</span></a>
+
+      <div class="hero-strip">
+        <div class="swatch" data-file="01-countach-au-repos.png"></div>
+        <div class="swatch" data-file="09-pause-sur-le-court.png"></div>
+        <div class="swatch" data-file="06-jardin-cramoisi.png"></div>
+        <div class="swatch" data-file="13-victoire-au-green.png"></div>
+      </div>
+    </section>
+
+    <section class="collections" id="collections">
+      <div class="section-head">
+        <h2>Collection</h2>
+        <p>Filtrez la galerie par collection.</p>
+      </div>
+      <div class="collection-tabs">
+        <button class="tab active" data-collection="dead-fresh">Dead Fresh</button>
+        <button class="tab" data-collection="drake">Drake</button>
+        <button class="tab" data-collection="dj-khaled">Dj Khaled</button>
+        <button class="tab" data-collection="lifestyle">Lifestyle</button>
+        <button class="tab" data-collection="vraie-richesse">Vraie Richesse</button>
+      </div>
+    </section>
+
+    <section class="gallery" id="galerie">
+      <div class="section-head">
+        <h2>La galerie</h2>
+        <p>Cliquez sur le cercle pour télécharger chaque toile en taille réelle, sans compression.</p>
+      </div>
+
+      <div class="grid" id="grid"></div>
+
+      <div class="all-download" id="tout">
+        <div class="txt">
+          <h3>Tout récupérer d'un coup</h3>
+          <p>Les soixante-et-un fichiers sont intégrés à cette page, en pleine résolution. Un clic déclenche tous les téléchargements à la suite.</p>
+        </div>
+        <button class="btn-primary" id="download-all">Tout télécharger</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="line"></div>
+    Tous droits réservés Crown © 2026
+  </footer>
+
+
+<script id="image-data">
+</script>
+
+<script>
+  const works = [
+    { file:"01-countach-au-repos.png",     title:"Countach au repos",          size:"1672 × 941", collection:"dead-fresh" },
+    { file:"02-envol-du-samedi.png",       title:"Envol du samedi",            size:"1505 × 1045", collection:"dead-fresh" },
+    { file:"03-rouge-sur-emeraude.png",    title:"Rouge sur émeraude",         size:"1503 × 1047", collection:"dead-fresh" },
+    { file:"04-vue-du-green.png",          title:"Vue du green",               size:"1504 × 1046", collection:"dead-fresh" },
+    { file:"05-le-grand-fairway.png",      title:"Le grand fairway",           size:"1501 × 1048", collection:"dead-fresh" },
+    { file:"06-jardin-cramoisi.png",       title:"Jardin cramoisi",            size:"1501 × 1048", collection:"dead-fresh" },
+    { file:"07-podium-bleu-nuit.png",      title:"Podium bleu nuit",           size:"1502 × 1047", collection:"dead-fresh" },
+    { file:"08-champagne-et-gourmandises.png", title:"Champagne & gourmandises", size:"1501 × 1048", collection:"dead-fresh" },
+    { file:"09-pause-sur-le-court.png",    title:"Pause sur le court",         size:"1500 × 1049", collection:"dead-fresh" },
+    { file:"10-plongeon-dore-un.png",      title:"Plongeon doré I",            size:"1503 × 1047", collection:"dead-fresh" },
+    { file:"11-portrait-vinyle-rouge.png", title:"Portrait, vinyle rouge",     size:"1503 × 1047", collection:"dead-fresh" },
+    { file:"12-plongeon-dore-deux.png",    title:"Plongeon doré II",           size:"1505 × 1045", collection:"dead-fresh" },
+    { file:"13-victoire-au-green.png",     title:"Victoire au green",          size:"1503 × 1047", collection:"dead-fresh" },
+    { file:"14-oeuvre-1.jpg",  title:"Double casquette",       size:"1672 × 941", collection:"drake" },
+    { file:"15-oeuvre-2.jpg",  title:"Jet-ski, nuit tombée",   size:"1672 × 940", collection:"drake" },
+    { file:"16-oeuvre-3.jpg",  title:"Fou rire sous les arbres", size:"1672 × 940", collection:"drake" },
+    { file:"17-oeuvre-4.jpg",  title:"Sur le banc, entre amis", size:"1672 × 940", collection:"drake" },
+    { file:"18-oeuvre-5.jpg",  title:"Duo de Maybach",         size:"1672 × 940", collection:"drake" },
+    { file:"19-oeuvre-6.jpg",  title:"Calligraphie dorée",     size:"1672 × 940", collection:"drake" },
+    { file:"20-oeuvre-7.jpg",  title:"Main scintillante",      size:"1672 × 940", collection:"drake" },
+    { file:"21-oeuvre-8.jpg",  title:"Face au ciel",           size:"1672 × 941", collection:"drake" },
+    { file:"22-khaled-1.jpg",  title:"Cavalière sur la plage",   size:"1683 × 934", collection:"dj-khaled" },
+    { file:"23-khaled-2.jpg",  title:"Trio sous les palmiers",   size:"1727 × 910", collection:"dj-khaled" },
+    { file:"24-khaled-3.jpg",  title:"Vue plongeante",           size:"1672 × 940", collection:"dj-khaled" },
+    { file:"25-khaled-4.jpg",  title:"Feu d'artifice sur la ville", size:"1672 × 940", collection:"dj-khaled" },
+    { file:"26-khaled-5.jpg",  title:"Garden party",             size:"1938 × 811", collection:"dj-khaled" },
+    { file:"27-khaled-6.jpg",  title:"Soirée piscine",           size:"1732 × 908", collection:"dj-khaled" },
+    { file:"28-khaled-7.jpg",  title:"Sous les néons",           size:"1695 × 928", collection:"dj-khaled" },
+    { file:"29-lifestyle-1.jpg", title:"Terrasse sur la baie",     size:"1535 × 1024", collection:"lifestyle" },
+    { file:"30-lifestyle-2.jpg", title:"Départ au large",          size:"1619 × 972", collection:"lifestyle" },
+    { file:"31-lifestyle-3.jpg", title:"Plongeon doré",            size:"1659 × 948", collection:"lifestyle" },
+    { file:"32-lifestyle-4.jpg", title:"Balle de match",           size:"1672 × 941", collection:"lifestyle" },
+    { file:"33-lifestyle-5.jpg", title:"Virage sur la Riviera",    size:"1538 × 1022", collection:"lifestyle" },
+    { file:"34-lifestyle-6.jpg", title:"Départ en week-end",       size:"1473 × 1068", collection:"lifestyle" },
+    { file:"35-lifestyle-7.jpg", title:"Chicane à Monaco",         size:"1537 × 1023", collection:"lifestyle" },
+    { file:"36-lifestyle-8.jpg", title:"Feux d'artifice, casque en main", size:"1672 × 941", collection:"lifestyle" },
+    { file:"37-lifestyle-9.jpg", title:"Coucher de soleil sur le green", size:"1672 × 941", collection:"lifestyle" },
+    { file:"38-lifestyle-10.jpg", title:"Retour au port",          size:"1689 × 931", collection:"lifestyle" },
+    { file:"39-richesse-1.jpg", title:"Poignée de main sous le palmier", size:"968 × 1625", collection:"vraie-richesse", portrait:true },
+    { file:"40-richesse-2.jpg", title:"Sortie en mer",              size:"964 × 1631", collection:"vraie-richesse", portrait:true },
+    { file:"41-richesse-3.jpg", title:"C'est la vraie richesse",    size:"968 × 1625", collection:"vraie-richesse", portrait:true },
+    { file:"42-richesse-4.jpg", title:"Salut sous la toile dorée",  size:"972 × 1617", collection:"vraie-richesse", portrait:true },
+    { file:"43-richesse-5.jpg", title:"Magnum sur le buggy",        size:"966 × 1628", collection:"vraie-richesse", portrait:true },
+    { file:"44-richesse-6.jpg", title:"Balenciaga en terrasse",     size:"969 × 1624", collection:"vraie-richesse", portrait:true },
+    { file:"45-richesse-7.jpg", title:"Portrait, chaîne en or",     size:"966 × 1628", collection:"vraie-richesse", portrait:true },
+    { file:"46-richesse-8.jpg", title:"Sous le kiosque",            size:"968 × 1625", collection:"vraie-richesse", portrait:true },
+    { file:"47-richesse-9.jpg", title:"Toast entre amis",           size:"964 × 1632", collection:"vraie-richesse", portrait:true },
+    { file:"48-richesse-10.jpg", title:"Le service de champagne",   size:"962 × 1634", collection:"vraie-richesse", portrait:true },
+    { file:"49-richesse-11.jpg", title:"Face à la baie",            size:"963 × 1634", collection:"vraie-richesse", portrait:true },
+    { file:"50-richesse-12.jpg", title:"Retour vers le quai",       size:"965 × 1629", collection:"vraie-richesse", portrait:true },
+    { file:"51-lifestyle2-1.jpg", title:"Jouets flottants, Mykonos",  size:"941 × 1670", collection:"lifestyle", portrait:true },
+    { file:"52-lifestyle2-2.jpg", title:"Vue plongeante sur le bain", size:"941 × 1672", collection:"lifestyle", portrait:true },
+    { file:"53-lifestyle2-3.jpg", title:"Salon face à la crique",    size:"941 × 1672", collection:"lifestyle", portrait:true },
+    { file:"54-lifestyle2-4.jpg", title:"Vers le jet privé",         size:"1050 × 1498", collection:"lifestyle", portrait:true },
+    { file:"55-lifestyle2-5.jpg", title:"Palmiers, horizon bleu",    size:"1629 × 966", collection:"lifestyle" },
+    { file:"56-lifestyle2-6.jpg", title:"Embarquement, duo bleu",    size:"941 × 1672", collection:"lifestyle", portrait:true },
+    { file:"57-lifestyle2-7.jpg", title:"Ferrari sur tapis rouge",   size:"1535 × 1024", collection:"lifestyle" },
+    { file:"58-lifestyle2-8.jpg", title:"Classique sous le porche",  size:"1513 × 1040", collection:"lifestyle" },
+    { file:"59-lifestyle2-9.jpg", title:"Piscine entre cyprès",      size:"1542 × 1020", collection:"lifestyle" },
+    { file:"60-lifestyle2-10.jpg", title:"Green face à la baie",     size:"1023 × 1537", collection:"lifestyle", portrait:true },
+    { file:"61-lifestyle2-11.jpg", title:"Terrasse suspendue",       size:"1537 × 1023", collection:"lifestyle" },
+  ];
+
+  const layoutPattern = ["wide","narrow","narrow","wide","narrow","narrow","wide","narrow","narrow","narrow","narrow","narrow","narrow","wide","narrow","narrow","wide","narrow","narrow","wide","narrow","wide","narrow","narrow","wide","narrow","narrow","wide","narrow","narrow","wide","narrow","narrow","wide","narrow","narrow","wide","narrow","narrow","narrow","narrow","narrow","narrow","narrow","narrow","narrow","narrow","narrow","narrow","narrow","narrow","narrow","narrow","narrow","narrow","wide","narrow","narrow","wide","narrow","narrow","wide","narrow"];
+
+  const grid = document.getElementById('grid');
+
+  function renderGrid(filter){
+    grid.innerHTML = '';
+    let i = 0;
+    works.forEach((w) => {
+      if (filter !== 'all' && w.collection !== filter) return;
+      const num = String(i+1).padStart(2,'0');
+      const src = 'images/' + w.file;
+      const card = document.createElement('div');
+      const layoutClass = w.portrait ? 'narrow' : (layoutPattern[i] || '');
+      card.className = 'card ' + layoutClass;
+      const frameClass = w.portrait ? 'frame portrait' : 'frame';
+      card.innerHTML = `
+        <div class="${frameClass}">
+          <img src="${src}" alt="${w.title}" loading="lazy" draggable="false">
+          <span class="num">${num}</span>
+        </div>
+        <div class="meta">
+          <div class="info">
+            <h3>${w.title}</h3>
+            <div class="specs">${w.size} · PNG</div>
+          </div>
+          <a class="dl" href="${src}" download="${w.file}" title="Télécharger en taille réelle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3v12"/>
+              <path d="M7 10l5 5 5-5"/>
+              <path d="M5 21h14"/>
+            </svg>
+          </a>
+        </div>
+      `;
+      grid.appendChild(card);
+      i++;
+    });
+  }
+
+  renderGrid('dead-fresh');
+
+  document.querySelectorAll('.collection-tabs .tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.collection-tabs .tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      renderGrid(tab.getAttribute('data-collection'));
+    });
+  });
+
+  // hero strip swatches
+  document.querySelectorAll('.swatch[data-file]').forEach(el => {
+    const f = el.getAttribute('data-file');
+    if (f) {
+      el.style.backgroundImage = `url('images/${f}')`;
+    }
+  });
+
+  // download every work in sequence
+  document.getElementById('download-all').addEventListener('click', () => {
+    works.forEach((w, i) => {
+      setTimeout(() => {
+        const a = document.createElement('a');
+        a.href = 'images/' + w.file;
+        a.download = w.file;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      }, i * 400);
+    });
+  });
+
+  // discourage casual right-click saving of preview images (download buttons remain the intended path)
+  document.addEventListener('contextmenu', (e) => {
+    if (e.target.tagName === 'IMG' || e.target.classList.contains('swatch')) e.preventDefault();
+  });
+</script>
+
+</body>
+</html>

@@ -360,12 +360,16 @@
   }
 
   .grid{
-    display:grid;
-    grid-template-columns:repeat(12, 1fr);
-    gap:20px;
+    column-count:4;
+    column-gap:20px;
   }
   .card{
-    grid-column:span 6;
+    display:inline-block;
+    width:100%;
+    margin:0 0 20px;
+    break-inside:avoid;
+    -webkit-column-break-inside:avoid;
+    page-break-inside:avoid;
     border-radius:var(--radius);
     background:rgba(255,255,255,0.55);
     border:1px solid rgba(255,255,255,0.65);
@@ -403,8 +407,6 @@
     filter:blur(1.5px);
     opacity:0.5;
   }
-  .card.wide{ grid-column:span 8; }
-  .card.narrow{ grid-column:span 4; }
   .card:hover{
     transform:translateY(-4px);
     background:
@@ -416,16 +418,11 @@
   .card .frame{
     position:relative;
     width:100%;
-    aspect-ratio:3/2;
     overflow:hidden;
-  }
-  .card .frame.portrait{
-    aspect-ratio:9/16;
   }
   .card .frame img{
     width:100%;
-    height:100%;
-    object-fit:cover;
+    height:auto;
     display:block;
     transition:transform 0.7s var(--ease), filter 0.5s ease;
   }
@@ -587,13 +584,19 @@
     margin:0 auto 22px;
   }
 
+  @media (max-width: 1280px){
+    .grid{ column-count:3; }
+  }
   @media (max-width: 860px){
-    .card{ grid-column:span 12 !important; }
+    .grid{ column-count:2; }
     header{ padding:0 16px; }
     header nav{ display:none; }
     .hero-strip{ display:none; }
     .section-head{ flex-direction:column; align-items:flex-start; }
     .section-head p{ text-align:left; }
+  }
+  @media (max-width: 520px){
+    .grid{ column-count:1; }
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -628,14 +631,14 @@
       <a href="#galerie">Galerie</a>
       <a href="#tout">Tout télécharger</a>
     </nav>
-    <div class="count">69 œuvres</div>
+    <div class="count">81 œuvres</div>
   </header>
 
   <main>
     <section class="hero">
       <div class="eyebrow">Collection à l'huile — édition numérique</div>
       <h1>Crown Wallpaper<br>by <a href="https://www.tiktok.com/@j5lio?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none;">@j5lio</a></h1>
-      <p>Soixante-neuf compositions à l'empâtement épais — voitures, verts de golf, podiums et portraits — réunies dans une seule galerie. Chaque image est disponible en pleine résolution.</p>
+      <p>Quatre-vingt-une compositions à l'empâtement épais — voitures, verts de golf, podiums et portraits — réunies dans une seule galerie. Chaque image est disponible en pleine résolution.</p>
       <a href="https://www.buymeacoffee.com/CrownWallpaper" target="_blank" rel="noopener noreferrer" class="support-box"><span class="cup">☕</span> Support me 1$ (optional)</a>
       <br>
       <a href="#galerie" class="glass-cta">Voir la collection <span class="arrow">↓</span></a>
@@ -660,6 +663,7 @@
         <button class="tab" data-collection="lifestyle">Lifestyle</button>
         <button class="tab" data-collection="vraie-richesse">Vraie Richesse</button>
         <button class="tab" data-collection="entourage">Entourage</button>
+        <button class="tab" data-collection="euphoria">Euphoria</button>
       </div>
     </section>
 
@@ -674,7 +678,7 @@
       <div class="all-download" id="tout">
         <div class="txt">
           <h3>Tout récupérer d'un coup</h3>
-          <p>Les soixante-neuf fichiers sont intégrés à cette page, en pleine résolution. Un clic déclenche tous les téléchargements à la suite.</p>
+          <p>Les quatre-vingt-un fichiers sont intégrés à cette page, en pleine résolution. Un clic déclenche tous les téléchargements à la suite.</p>
         </div>
         <button class="btn-primary" id="download-all">Tout télécharger</button>
       </div>
@@ -761,6 +765,18 @@
     { file:"67-entourage-6.jpg", title:"Discussion de rue",          size:"1677 × 938", collection:"entourage" },
     { file:"68-entourage-7.jpg", title:"Sur l'escalator",            size:"1676 × 938", collection:"entourage" },
     { file:"69-entourage-8.jpg", title:"Soirée sous les lumières bleues", size:"1672 × 941", collection:"entourage" },
+    { file:"70-euphoria-1.jpg", title:"Sous l'eau, lumières de fête",   size:"1674 × 939", collection:"euphoria" },
+    { file:"71-euphoria-2.jpg", title:"Couloir de casiers",             size:"1672 × 941", collection:"euphoria" },
+    { file:"72-euphoria-3.jpg", title:"Cigarillo sous les guirlandes",  size:"1678 × 937", collection:"euphoria" },
+    { file:"73-euphoria-4.jpg", title:"Néons rouges et bleus",          size:"1669 × 942", collection:"euphoria" },
+    { file:"74-euphoria-5.jpg", title:"Slow sous les lumières mauves",  size:"1674 × 939", collection:"euphoria" },
+    { file:"75-euphoria-6.jpg", title:"Portrait, lueur bleutée",        size:"1674 × 940", collection:"euphoria" },
+    { file:"76-euphoria-7.jpg", title:"Sourire, fond doré",             size:"1672 × 941", collection:"euphoria" },
+    { file:"77-euphoria-8.jpg", title:"Regard baissé, tons chauds",     size:"1709 × 920", collection:"euphoria" },
+    { file:"78-euphoria-9.jpg", title:"Face caméra, ombre dorée",       size:"1706 × 922", collection:"euphoria" },
+    { file:"79-euphoria-10.jpg", title:"Nature morte, couronne",        size:"1680 × 936", collection:"euphoria" },
+    { file:"80-euphoria-11.jpg", title:"Dans l'entrebâillement",        size:"1704 × 923", collection:"euphoria" },
+    { file:"81-euphoria-12.jpg", title:"Devant la maison, 5611",        size:"1710 × 920", collection:"euphoria" },
   ];
 
   const layoutPattern = ["wide","narrow","narrow","wide","narrow","narrow","wide","narrow","narrow","narrow","narrow","narrow","narrow","wide","narrow","narrow","wide","narrow","narrow","wide","narrow","wide","narrow","narrow","wide","narrow","narrow","wide","narrow","narrow","wide","narrow","narrow","wide","narrow","narrow","wide","narrow","narrow","narrow","narrow","narrow","narrow","narrow","narrow","narrow","narrow","narrow","narrow","narrow","narrow","narrow","narrow","narrow","narrow","wide","narrow","narrow","wide","narrow","narrow","wide","narrow","wide","narrow","narrow","wide","narrow","narrow","wide","narrow"];
